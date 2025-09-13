@@ -1,18 +1,16 @@
-# 🎵 Suno x HackMIT 2025 Demo Starter Web App
+# 🏃‍♂️🎵 RhythmRun - AI-Powered Running Playlists
 
-A demo starter web app for HackMIT 2025 that leverages the Suno external API to generate music with AI! Transform your ideas into beautiful music with just a text description.
+RhythmRun generates personalized running playlists based on your actual running data from Strava or custom training plans. Using AI music generation, we create songs that match your pace, elevation, and running style for the perfect workout soundtrack.
 
-**📖 Comprehensive API Documentation:** [suno.com/hackmit](https://suno.com/hackmit)
+**📖 Suno API Documentation:** [suno.com/hackmit](https://suno.com/hackmit)
 
 ## 🚀 Quick Start
 
-### 0. Clone This Starter App
-
-Want to use this code to get started, or play with the app? Begin by cloning the repository:
+### 0. Clone This Repository
 
 ```bash
-git clone https://github.com/suno-ai/hackmit-starter-app.git
-cd hackmit-starter-app
+git clone <your-repo-url>
+cd RhythmRun
 ```
 
 ### 1. Set Up Environment Variables
@@ -24,14 +22,25 @@ Create a `.env.local` file in your project root:
 touch .env.local
 ```
 
-Add your Suno API key:
+Add your API keys:
 
 ```env
 # .env.local
+# Suno API Configuration
 SUNO_API_KEY=your_suno_api_key_here
+
+# Strava API Configuration
+NEXT_PUBLIC_STRAVAID=your_strava_client_id_here
+STRAVASECRET=your_strava_client_secret_here
+STRAVA_ACCESS_TOKEN=your_strava_access_token_here
+
+# Next.js Configuration
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-**🚨 Important:** One of your team members should have received an email with your team's API key. If not, then please visit the Suno booth at HackMIT 2025!
+**🚨 Important:** 
+- Get your Suno API key from the Suno booth at HackMIT 2025
+- Register your app at [Strava API](https://www.strava.com/settings/api) to get client credentials
 
 ### 2. Install and Run
 
@@ -45,142 +54,115 @@ yarn install
 yarn dev
 ```
 
-### 3. Test the Starter App
+### 3. Test RhythmRun
 
 1. **Open your browser** to `http://localhost:3000`
-2. **Enter a song description** like "An upbeat pop song about coding at a hackathon"
-3. **Add style tags** (optional) like "pop, electronic, energetic"
-4. **Click "Generate Song"** and begin streaming the song as it generates
-5. **Wait 1-2 minutes** for generation to complete
-6. **Play and download** your generated songs!
+2. **Choose your runner type:**
+   - **Strava Runner**: Connect your Strava account to analyze your actual runs
+   - **Custom Runner**: Create playlists based on planned distance or duration
+3. **For Strava users**: Select one of your recent runs to analyze
+4. **For custom runners**: Enter distance (km) or duration (minutes) and choose from 3 interval options
+5. **Generate your playlist** and enjoy AI-generated songs that match your running style!
 
-## 🎯 Starter Features Implemented
+## 🎯 Features Implemented
 
-### Frontend Features
+### For Strava Runners
+- **Strava Integration**: Connect your Strava account to access your running data
+- **Run Analysis**: Analyze your past 5 runs with detailed pace, elevation, and heart rate data
+- **Smart Playlist Generation**: Create playlists based on your actual running patterns
+- **1-Minute Intervals**: Break down your run into 1-minute segments with matching music
 
-- **Dual Input Fields**: Song description + optional style tags
-- **Audio Playback**: Built-in play/pause controls with scrubbing
-- **Download**: Direct download of MP3 files
+### For Custom Runners
+- **Distance/Duration Input**: Enter your planned run distance or duration
+- **3 Training Options**: Choose from Progressive, Fartlek, or Hill training plans
+- **Interval-Based Playlists**: Get songs that match each segment of your workout
 
-### Backend Features
+### Music Generation
+- **AI-Powered**: Uses Suno API to generate custom songs for each interval
+- **Pace-Matched Tempo**: BPM automatically adjusted based on your running pace
+- **Genre Selection**: Music genres chosen based on pace, elevation, and workout intensity
+- **Real-time Streaming**: Start listening to songs as they generate
+- **Download Support**: Download your complete playlist as MP3 files
 
-- **Suno HackMIT API Integration**: Uses `/api/v2/external/hackmit/` endpoints
-- **Polling Logic**: Automatic status checking until completion
-- **Environment Security**: Secure token handling
+### Technical Features
+- **Responsive Design**: Works on desktop and mobile devices
+- **Audio Controls**: Built-in play/pause, scrubbing, and volume controls
+- **Error Handling**: Comprehensive error handling and user feedback
+- **Environment Security**: Secure API key management
 
 ## 🔍 API Endpoints
 
-### `POST /api/generate-music`
+### Music Generation
+- `POST /api/generate-music` - Start song generation with Suno API
+- `POST /api/check-status` - Check generation status and get audio URLs
 
-Starts song generation with the Suno HackMIT API.
+### Strava Integration
+- `GET /api/strava/activities` - Get user's recent running activities
+- `POST /api/analyze-run` - Analyze a specific run and generate music recommendations
 
-> **Note**: The HackMIT generate endpoint returns a single clip object, which our API wraps in an array for frontend consistency.
+### Custom Training
+- `POST /api/generate-intervals` - Generate interval training options for non-Strava users
 
-**Request Body:**
-
-```json
-{
-  "prompt": "A cheerful song about HackMIT",
-  "tags": "pop, upbeat, electronic",
-  "makeInstrumental": false
-}
-```
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "clips": [
-    {
-      "id": "clip-uuid-1",
-      "status": "submitted",
-      "created_at": "2025-01-15T..."
-    }
-  ]
-}
-```
-
-### `POST /api/check-status`
-
-Checks the generation status of some clip(s).
-
-> **Note**: The HackMIT clips endpoint returns an array of clip objects (even for a single clip ID).
-
-**Request Body:**
-
-```json
-{
-  "clipIds": ["clip-uuid-1", "clip-uuid-2"]
-}
-```
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "clips": [
-    {
-      "id": "clip-uuid-1",
-      "status": "complete",
-      "title": "HackMIT Anthem",
-      "audio_url": "https://cdn1.suno.ai/...",
-      "metadata": {
-        "duration": 180.5,
-        "tags": "pop, upbeat, electronic"
-      }
-    }
-  ]
-}
-```
+### Strava OAuth
+- `GET /api/strava/exchange-token` - Handle Strava OAuth callback
 
 ## 🐛 Troubleshooting
 
-### "API key not configured" Error
-
+### API Configuration Issues
 - Make sure `.env.local` exists in your project root
-- Verify the API key is correctly set as `SUNO_API_KEY=your_key`
-- Restart your development server after adding the environment variable
+- Verify all API keys are correctly set (Suno, Strava)
+- Restart your development server after adding environment variables
 
-### Generation Takes Too Long
+### Strava Authentication Issues
+- Ensure your Strava app is configured with the correct redirect URI
+- Check that your Strava app has the required scopes (read, activity:read_all)
+- Verify your Strava client ID and secret are correct
 
-- Song generation typically takes 1-2 minutes
+### Music Generation Issues
+- Song generation typically takes 1-2 minutes per song
 - The app polls every 5 seconds automatically
 - Check the status updates in the progress section
+- Ensure you have sufficient Suno API credits
 
-### Audio Won't Play
-
+### Audio Playback Issues
 - Some browsers require user interaction before playing audio
 - Try clicking play again, or check browser console for errors
 - Verify that the audio URL is accessible
+- Check your internet connection for streaming issues
 
 ## 📝 Main Code Structure
 
 ```
 /app
   /api
-    /generate-music/route.ts    # Starts song generation
-    /check-status/route.ts      # Checks generation status
-  page.tsx                      # Main UI component
+    /generate-music/route.ts        # Suno music generation
+    /check-status/route.ts          # Check generation status
+    /analyze-run/route.ts           # Analyze Strava runs
+    /generate-intervals/route.ts    # Generate training intervals
+    /strava/
+      /activities/route.ts          # Get Strava activities
+      /exchange-token/page.tsx      # Strava OAuth callback
+  page.tsx                          # Main RhythmRun UI
 
 /lib
-  suno-service.ts              # Service layer for API calls
+  suno-service.ts                   # Suno API service
+  strava-service.ts                 # Strava API service
 
-.env.local                     # Environment variables (create this!)
+.env.local                          # Environment variables (create this!)
 ```
 
 ## 🎉 You're All Set!
 
-Your Suno-powered music generation app is ready to rock for HackMIT 2025! 🎸
+Your RhythmRun app is ready to create personalized running playlists! 🏃‍♂️🎵
 
 Make sure to:
 
-1. Get your API key from the Suno booth
-2. Add it to `.env.local` as `SUNO_API_KEY`
-3. Start the dev server
-4. Create some amazing music! 🎵
+1. Get your Suno API key from the Suno booth at HackMIT
+2. Set up your Strava app and get client credentials
+3. Add all API keys to `.env.local`
+4. Start the dev server with `yarn dev`
+5. Create amazing running playlists! 🎵
 
 ---
 
-Built with ❤️ for HackMIT 2025 • Powered by [Suno](https://suno.com) • [API Docs](https://suno.com/hackmit)
+Built with ❤️ for HackMIT 2025 • Powered by [Suno](https://suno.com) & [Strava](https://strava.com)
