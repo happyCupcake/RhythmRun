@@ -187,7 +187,7 @@ export class StravaService {
    */
   static async analyzeRun(activityId: number): Promise<RunAnalysis> {
     try {
-      const response = await fetch(`${this.baseUrl}/analyze-run`, {
+      const response = await fetch(`${this.baseUrl}/api/analyze-run?access_token=${localStorage.getItem("strava_access_token")}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

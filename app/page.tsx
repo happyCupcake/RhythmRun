@@ -806,8 +806,8 @@ export default function RhythmRun() {
               <div className="space-y-6">
                 <h2 className="text-2xl font-semibold text-center">Your Running Playlist</h2>
                 <div className="space-y-4">
-                  {generatedClips.map((clip) => (
-                    <Card key={clip.id} className="p-4 bg-gradient-to-r from-green-50 to-blue-50">
+                  {generatedClips.map((clip, ind) => (
+                    <Card key={ind} className="p-4 bg-gradient-to-r from-green-50 to-blue-50">
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
                           <h3 className="font-semibold text-lg">
