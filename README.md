@@ -30,7 +30,7 @@ Add your API keys:
 SUNO_API_KEY=your_suno_api_key_here
 
 # Strava API Configuration
-STRAVAID=your_strava_client_id_here
+NEXT_PUBLIC_STRAVAID=your_strava_client_id_here
 STRAVASECRET=your_strava_client_secret_here
 STRAVA_ACCESS_TOKEN=your_strava_access_token_here
 

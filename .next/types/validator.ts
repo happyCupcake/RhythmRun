@@ -47,12 +47,6 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 }
 
 
-// Validate ../../app/api/strava/exchange-token/page.tsx
-{
-  const handler = {} as typeof import("../../app/api/strava/exchange-token/page.js")
-  handler satisfies AppPageConfig<"/api/strava/exchange-token">
-}
-
 // Validate ../../app/page.tsx
 {
   const handler = {} as typeof import("../../app/page.js")
@@ -87,6 +81,12 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 {
   const handler = {} as typeof import("../../app/api/strava/activities/route.js")
   handler satisfies RouteHandlerConfig<"/api/strava/activities">
+}
+
+// Validate ../../app/api/strava/exchange-token/route.ts
+{
+  const handler = {} as typeof import("../../app/api/strava/exchange-token/route.js")
+  handler satisfies RouteHandlerConfig<"/api/strava/exchange-token">
 }
 
 
