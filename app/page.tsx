@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
-import { Download, Music, Sparkles, Play, Pause, MapPin, Clock, TrendingUp, Activity, Zap, Target } from "lucide-react";
+import { Download, Music, Sparkles, Play, Pause, MapPin, Clock, TrendingUp, Activity, Zap, Target, WandSparkles } from "lucide-react";
 import { SunoService, SunoClip } from "@/lib/suno-service";
 import { StravaService, StravaActivity, RunAnalysis } from "@/lib/strava-service";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from "recharts";
@@ -283,15 +283,15 @@ export default function RhythmRun() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-yellow-50 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-red-50 to-blue-50 relative overflow-hidden">
       {/* Floating cloud decorations */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-20 left-10 w-32 h-20 bg-gradient-to-r from-orange-200/40 to-red-200/40 rounded-full blur-xl animate-pulse" />
+        <div className="absolute top-20 left-10 w-32 h-20 bg-gradient-to-r from-green-200/40 to-red-200/40 rounded-full blur-xl animate-pulse" />
         <div className="absolute top-40 right-20 w-40 h-24 bg-gradient-to-r from-red-200/40 to-yellow-200/40 rounded-full blur-xl animate-pulse delay-1000" />
-        <div className="absolute bottom-32 left-1/4 w-36 h-22 bg-gradient-to-r from-yellow-200/40 to-orange-200/40 rounded-full blur-xl animate-pulse delay-2000" />
-        <div className="absolute bottom-20 right-1/3 w-28 h-18 bg-gradient-to-r from-orange-300/30 to-red-300/30 rounded-full blur-xl animate-pulse delay-500" />
-        <div className="absolute top-60 left-1/2 w-24 h-16 bg-gradient-to-r from-red-300/25 to-orange-300/25 rounded-full blur-2xl animate-pulse delay-3000" />
-        <div className="absolute bottom-60 right-10 w-30 h-20 bg-gradient-to-r from-yellow-300/35 to-red-300/35 rounded-full blur-xl animate-pulse delay-1500" />
+        <div className="absolute bottom-32 left-1/4 w-36 h-22 bg-gradient-to-r from-yellow-200/40 to-green-200/40 rounded-full blur-xl animate-pulse delay-2000" />
+        <div className="absolute bottom-20 right-1/3 w-28 h-18 bg-gradient-to-r from-green-300/30 to-red-300/30 rounded-full blur-xl animate-pulse delay-500" />
+        <div className="absolute top-60 left-1/2 w-24 h-16 bg-gradient-to-r from-red-300/25 to-green-300/25 rounded-full blur-2xl animate-pulse delay-3000" />
+        <div className="absolute bottom-60 right-10 w-30 h-20 bg-gradient-to-r from-yellow-300/35 to-pink-300/35 rounded-full blur-xl animate-pulse delay-1500" />
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-16">
@@ -319,7 +319,7 @@ export default function RhythmRun() {
                 <div className="grid md:grid-cols-2 gap-6">
                   <Card className="p-6 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setUserType('strava')}>
                     <div className="text-center space-y-4">
-                      <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto">
+                      <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto">
                         <Activity className="w-8 h-8 text-orange-600" />
                       </div>
                       <h3 className="text-xl font-semibold">Strava Runner</h3>
@@ -330,8 +330,8 @@ export default function RhythmRun() {
                   
                   <Card className="p-6 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setUserType('non-strava')}>
                     <div className="text-center space-y-4">
-                      <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
-                        <Target className="w-8 h-8 text-blue-600" />
+                      <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto">
+                        <WandSparkles className="w-8 h-8 text-purple-600" />
                       </div>
                       <h3 className="text-xl font-semibold">Custom Runner</h3>
                       <p className="text-muted-foreground">Create a playlist based on your planned distance or duration</p>
