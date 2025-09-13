@@ -150,7 +150,7 @@ export class StravaService {
       }
 
       const data = await response.json();
-      return data.activities || [];
+      return data || [];
     } catch (error) {
       console.error("Get recent runs error:", error);
       throw error;
