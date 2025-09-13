@@ -6,7 +6,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Download, Music, Sparkles, Play, Pause } from "lucide-react";
 import { SunoService, SunoClip } from "@/lib/suno-service";
-import { StravaService } from "@/lib/strava-service";
 
 export default function MusicGenerator() {
   const [prompt, setPrompt] = useState("");
