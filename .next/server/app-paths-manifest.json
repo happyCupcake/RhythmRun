@@ -1,6 +1,0 @@
-{
-  "/_not-found/page": "app/_not-found/page.js",
-  "/api/generate-intervals/route": "app/api/generate-intervals/route.js",
-  "/icon.ico/route": "app/icon.ico/route.js",
-  "/page": "app/page.js"
-}
