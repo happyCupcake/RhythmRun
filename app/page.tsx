@@ -78,6 +78,7 @@ export default function RhythmRun() {
   };
 
   const generateIntervalOptions = async () => {
+    setSelectedInterval(null);
     if (!inputValue || inputValue <= 0) return;
     
     try {
@@ -616,7 +617,7 @@ export default function RhythmRun() {
                       </>
                     ) : (
                       <>
-                        <Target className="w-5 h-5 mr-2" />
+                        <WandSparkles className="w-5 h-5 mr-2" />
                         Generate Interval Options
                       </>
                     )}
@@ -634,7 +635,7 @@ export default function RhythmRun() {
                             ? 'ring-2 ring-blue-500 bg-blue-50' 
                             : 'hover:shadow-md'
                         }`}
-                        onClick={() => setSelectedInterval(option)}
+                        onClick={() => setSelectedInterval(selectedInterval?.id === option.id ? null : option)}
                       >
                         <div className="space-y-4">
                           <div className="space-y-2">
