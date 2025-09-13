@@ -27,7 +27,9 @@ export default function MusicGenerator() {
   const [isDownloading, setIsDownloading] = useState<{
     [key: string]: boolean;
   }>({});
-
+  const loginWithStrava = () => {
+    window.location.href = `http://www.strava.com/oauth/authorize?client_id=176807&response_type=code&redirect_uri=${window.location.origin}/api/strava/exchange-token&approval_prompt=force&scope=read,activity:read_all`;
+  }
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
 
@@ -359,7 +361,7 @@ export default function MusicGenerator() {
                   </>
                 )}
               </Button>
-
+              <Button onClick={loginWithStrava} size="lg">Strava Login</Button>
               {/* Status Display */}
               {isGenerating && generatedClips.length > 0 && (
                 <div className="text-center">
