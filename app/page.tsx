@@ -38,8 +38,14 @@ export default function RhythmRun() {
 
   // Check if user is authenticated with Strava
   useEffect(() => {
-    const stravaCode = localStorage.getItem("strava_code");
-    if (stravaCode) {
+    const query = new URLSearchParams(window.location.search)
+    const stravaAccess = query.get("access_token");
+    const stravaRefresh = query.get("refresh_token")
+    const expiryTime = query.get("expires_at")
+    if (stravaAccess && stravaRefresh && expiryTime) {
+      localStorage.setItem("strava_access_token", stravaAccess)
+      localStorage.setItem("strava_refresh_token", stravaRefresh )
+      localStorage.setItem("strava_expiry", expiryTime)
       setIsAuthenticated(true);
       setUserType('strava');
       loadStravaRuns();
