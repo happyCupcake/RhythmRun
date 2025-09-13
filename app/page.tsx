@@ -8,7 +8,6 @@ import { Download, Music, Sparkles, Play, Pause, MapPin, Clock, TrendingUp, Acti
 import { SunoService, SunoClip } from "@/lib/suno-service";
 import { StravaService, StravaActivity, RunAnalysis } from "@/lib/strava-service";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from "recharts";
-
 type UserType = 'strava' | 'non-strava';
 type InputType = 'distance' | 'duration';
 
