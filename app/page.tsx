@@ -28,7 +28,7 @@ export default function MusicGenerator() {
     [key: string]: boolean;
   }>({});
   const loginWithStrava = () => {
-    window.location.href = `http://www.strava.com/oauth/authorize?client_id=176807&response_type=code&redirect_uri=${window.location.origin}/api/strava/exchange-token&approval_prompt=force&scope=read,activity:read_all`;
+    window.location.href = `http://www.strava.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_STRAVAID}&response_type=code&redirect_uri=${window.location.origin}/api/strava/exchange-token&approval_prompt=force&scope=read,activity:read_all`;
   }
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
