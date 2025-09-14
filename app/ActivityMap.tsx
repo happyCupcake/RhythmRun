@@ -54,7 +54,7 @@ export default function ActivityMap({ encodedPolyline, intervals = [] }: Activit
     <MapContainer
       center={positions[0]}
       zoom={13}
-      style={{ height: "400px", width: "100%", borderRadius: "1rem" }}
+      style={{ height: "400px", width: "80%", borderRadius: "1rem"  }}
     >
       <TileLayer
         url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
