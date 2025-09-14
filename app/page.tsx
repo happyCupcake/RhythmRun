@@ -284,7 +284,7 @@ export default function RhythmRun() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-red-50 to-blue-50 relative overflow-hidden">
+    <div className="font-sans min-h-screen bg-gradient-to-br from-green-50 via-red-50 to-blue-50 relative overflow-hidden">
       {/* Floating cloud decorations */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-20 left-10 w-32 h-20 bg-gradient-to-r from-green-200/40 to-red-200/40 rounded-full blur-xl animate-pulse" />
@@ -314,13 +314,13 @@ export default function RhythmRun() {
 
           {/* User Type Selection */}
           {!userType && (
-            <Card className="p-8 backdrop-blur-sm bg-card/80 border-border/50 shadow-xl">
+            <Card className="font-sans p-8 backdrop-blur-sm bg-card/80 border-border/50 shadow-xl">
               <div className="space-y-6">
                 <h2 className="text-2xl font-semibold text-center">How do you want to create your playlist?</h2>
                 <div className="grid md:grid-cols-2 gap-6">
                   <Card className="p-6 cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setUserType('strava')}>
                     <div className="text-center space-y-4">
-                      <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto">
+                      <div className="w-16 h-16 bg-orange-200 rounded-full flex items-center justify-center mx-auto">
                         <Activity className="w-8 h-8 text-orange-600" />
                       </div>
                       <h3 className="text-xl font-semibold">Strava Runner</h3>
@@ -802,16 +802,17 @@ export default function RhythmRun() {
                 <h2 className="text-2xl font-semibold text-center">Your Running Playlist</h2>
                 <div className="space-y-4">
                   {generatedClips.map((clip) => (
-                    <Card key={clip.id} className="p-4 bg-gradient-to-r from-green-50 to-blue-50">
+                    <Card key={clip.id} className="p-4 bg-gradient-to-r from-purple-50 to-orange-50">
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
                           <h3 className="font-semibold text-lg">
                             {clip.title || "Untitled Song"}
                           </h3>
-                          <div className="text-xs text-muted-foreground">
+                          <div className="text-s text-foreground">
                             {clip.metadata.duration ? `${Math.round(clip.metadata.duration)}s` : ""}
                           </div>
                         </div>
+                        <h4>BPM: </h4>
 
                         {clip.metadata.tags && (
                           <p className="text-sm text-muted-foreground">
@@ -824,7 +825,7 @@ export default function RhythmRun() {
                             onClick={() => togglePlayPause(clip)}
                             variant="outline"
                             size="sm"
-                            className="flex-1"
+                            className="flex-1 bg-orange-200 hover:bg-orange-300 text-orange-800 border-orange-300"
                           >
                             {isPlaying[clip.id] ? (
                               <>
@@ -841,9 +842,9 @@ export default function RhythmRun() {
 
                           <Button
                             onClick={() => handleDownload(clip)}
-                            variant="secondary"
+                            variant="outline"
                             size="sm"
-                            className="flex-1"
+                            className="flex-1 hover:bg-orange-400 text-orange-800"
                             disabled={clip.status === "streaming"}
                           >
                             {clip.status === "streaming" ? (
