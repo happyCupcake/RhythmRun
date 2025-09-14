@@ -69,7 +69,7 @@ export default function ActivityMap({ encodedPolyline, intervals = [] }: Activit
         const pos = getPositionForKm(interval.startKm);
         return (
           <Marker key={interval.segment} position={pos}>
-            <Popup>Segment S{interval.segment}</Popup>
+            <Popup>Song {interval.segment}</Popup>
           </Marker>
         );
       })}
