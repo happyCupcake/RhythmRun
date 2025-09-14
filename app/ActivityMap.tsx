@@ -42,9 +42,10 @@ export default function ActivityMap({ encodedPolyline, intervals = [] }: Activit
       style={{ height: "400px", width: "100%", borderRadius: "1rem" }}
     >
     <TileLayer
-    url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
-    attribution="&copy; <a href='https://stadiamaps.com/'>Stadia Maps</a>, © <a href='https://openmaptiles.org/'>OpenMapTiles</a> © <a href='https://openstreetmap.org'>OpenStreetMap</a> contributors"
+    url="/tile.png"
+    attribution="&copy; Local Map Data"
     />
+
 
       <Polyline positions={positions} color="red" weight={4} />
 
