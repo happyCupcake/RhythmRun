@@ -128,8 +128,18 @@ export interface RunAnalysis {
 const api_url = "https://www.strava.com/api/v3"
 // Service functions for interacting with Strava API
 export class StravaService {
-  private static baseUrl = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "";
+  private static baseUrl = process.env.NODE_ENV === "development" ? "http://localhost:3000" : ""; 
+  static async refreshStravaToken(refreshToken: string) {
+    const response = await fetch(`/api/strava/refresh-token?refresh_token=${encodeURIComponent(refreshToken)}`, {
+      method: "GET",
+    });
 
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Failed to refresh Strava token");
+    }
+    return await response.json();
+  }
   /**
    * Get user's recent running activities
    */
