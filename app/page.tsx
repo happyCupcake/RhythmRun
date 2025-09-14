@@ -75,6 +75,27 @@ export default function RhythmRun() {
   setUserType(null);
 };
 
+const goToHomePage = () => {
+  // Reset all state to return to home page
+  setUserType(null);
+  setIsAuthenticated(false);
+  setStravaRuns([]);
+  setSelectedRun(null);
+  setRunAnalysis(null);
+  setInputType('distance');
+  setInputValue(0);
+  setIntervalOptions([]);
+  setSelectedInterval(null);
+  setIsGenerating(false);
+  setGeneratedClips([]);
+  setError(null);
+  
+  // Clear any Strava tokens as well
+  localStorage.removeItem("strava_access_token");
+  localStorage.removeItem("strava_refresh_token");
+  localStorage.removeItem("strava_expiry");
+};
+
   const loadStravaRuns = async () => {
     try {
       const runs = await StravaService.getRecentRuns(5);
@@ -315,7 +336,7 @@ export default function RhythmRun() {
               <Music className="w-6 h-6" />
               <Sparkles className="w-6 h-6" />
             </div>
-            <h1 className="text-4xl font-bold text-balance bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold text-balance bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent cursor-pointer hover:opacity-80 transition-opacity" onClick={goToHomePage}>
               RhythmRun
             </h1>
             <p className="text-lg text-muted-foreground text-pretty">
