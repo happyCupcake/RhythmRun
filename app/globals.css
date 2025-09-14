@@ -133,6 +133,23 @@
   h1 {
     font-family: var(--font-notable), sans-serif;
   }
+  
+  /* Custom cursor for all elements */
+  html, body, div, span, button, a, input, textarea, select {
+    cursor: url('https://icons.iconarchive.com/icons/custom-icon-design/mono-general-2/32/run-icon.png') 0 0, auto;
+
+  }
+  
+  /* Specific cursor states */
+  button:hover, a:hover {
+    cursor: url('https://icons.iconarchive.com/icons/custom-icon-design/mono-general-2/32/run-icon.png') 0 0, auto;
+
+  }
+  
+  input[type="text"], input[type="number"], textarea {
+    cursor: url('https://icons.iconarchive.com/icons/custom-icon-design/mono-general-2/32/run-icon.png') 0 0, auto;
+
+  }
 }
 
 @layer components {

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat, Notable } from "next/font/google";
 import "./globals.css";
 
+import "leaflet/dist/leaflet.css";
 const montserrat = Montserrat({
   variable: "--font-montserrat",
   subsets: ["latin"],

@@ -119,6 +119,7 @@ export interface RunAnalysis {
     duration: number;
     tempo: number; // BPM
   }>;
+  polyline?: string | null;
   overallStats: {
     averagePace: number;
     totalElevation: number;
