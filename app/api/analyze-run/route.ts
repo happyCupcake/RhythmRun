@@ -50,7 +50,10 @@ export async function POST(request: NextRequest) {
     // Analyze the run data
     const analysis = analyzeRunData(activity, streams);
     
-    return NextResponse.json(analysis);
+    return NextResponse.json({
+      ...analysis,
+      polyline: activity.map?.summary_polyline || null,
+  });
   } catch (error) {
     console.error("Analyze run error:", error);
     return NextResponse.json(
