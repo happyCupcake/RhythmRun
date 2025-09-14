@@ -472,7 +472,15 @@ const goToHomePage = () => {
                           <div className="pt-6 border-t">
                             <h3 className="text-xl font-semibold mb-4">Run Analysis</h3>
                             {runAnalysis.polyline ? (
-                              <ActivityMap encodedPolyline={runAnalysis.polyline} />
+                              <ActivityMap 
+                                encodedPolyline={runAnalysis.polyline} 
+                                intervals={runAnalysis.intervals.map((i, idx) => ({
+                                  segment: idx + 1,
+                                  startKm: idx,   // or compute from i.minute/duration
+                                  endKm: idx + 1, // or compute properly
+                                }))}
+                              />
+
                             ) : (
                               <p className="text-sm text-muted-foreground">No map available for this run.</p>
                             )}
