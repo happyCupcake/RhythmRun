@@ -9,6 +9,8 @@ import { SunoService, SunoClip } from "@/lib/suno-service";
 import { StravaService, StravaActivity, RunAnalysis } from "@/lib/strava-service";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from "recharts";
 import RunningAnimation from "@/components/RunningAnimation";
+import ActivityMap from "./ActivityMap";
+
 type UserType = 'strava' | 'non-strava';
 type InputType = 'distance' | 'duration';
 
@@ -428,7 +430,11 @@ export default function RhythmRun() {
                         {runAnalysis && (
                           <div className="pt-6 border-t">
                             <h3 className="text-xl font-semibold mb-4">Run Analysis</h3>
-                            
+                            {runAnalysis.polyline ? (
+                              <ActivityMap encodedPolyline={runAnalysis.polyline} />
+                            ) : (
+                              <p className="text-sm text-muted-foreground">No map available for this run.</p>
+                            )}
                             {/* Visual Chart */}
                             <div className="h-64 w-full mb-4">
                               <ResponsiveContainer width="100%" height="100%">

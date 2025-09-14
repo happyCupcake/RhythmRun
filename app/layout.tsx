@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
+import "leaflet/dist/leaflet.css";
+
 const geistSans = Inter({
   variable: "--font-geist-sans",
   subsets: ["latin"],
