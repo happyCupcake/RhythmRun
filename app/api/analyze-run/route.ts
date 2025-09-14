@@ -29,8 +29,15 @@ export async function POST(request: NextRequest) {
         },
       }
     );
-
-    if (!response.ok) {
+    const streams_res = await fetch(
+      `https://www.strava.com/api/v3/activities/${activityId}/streams?keys=altitude,pace&keys_by_type=true`,
+      {
+        headers:  {
+          'Authorization': `Bearer ${access_token}`,
+        },
+      }
+    )
+    if (!response.ok || !streams_res.ok) {
       const errorData = await response.json();
       console.error("Strava API error:", errorData);
       return NextResponse.json(
@@ -38,18 +45,12 @@ export async function POST(request: NextRequest) {
         { status: response.status }
       );
     }
-
     const activity = await response.json();
-    console.log(activity);
-
+    const streams = await streams_res.json();
     // Analyze the run data
-    const analysis = analyzeRunData(activity);
-
-    // Add polyline from Strava map data
-    return NextResponse.json({
-      ...analysis,
-      polyline: activity.map?.summary_polyline || null,
-    });
+    const analysis = analyzeRunData(activity, streams);
+    
+    return NextResponse.json(analysis);
   } catch (error) {
     console.error("Analyze run error:", error);
     return NextResponse.json(
@@ -59,44 +60,41 @@ export async function POST(request: NextRequest) {
   }
 }
 
-function analyzeRunData(activity: any) {
+function analyzeRunData(activity: any, streams: any) {
   const duration = activity.moving_time; // seconds
   const distance = activity.distance / 1000; // km
   const elevationGain = activity.total_elevation_gain || 0; // meters
-
-  // Calculate pace segments
-  const segmentCount = Math.ceil(distance * 2); // ~2 per km
-  const segmentDistance = distance / segmentCount;
+  
+  // Calculate pace segments based on distance, not time
+  const effective_size = distance + (duration / 10)
+  const segmentCount = Math.ceil(8 + Math.log(effective_size)) // ~2 segments per km
+  const segmentInterval = streams[0].data.length / segmentCount
+  const totalInd = streams[0].data.length
   const intervals = [];
+  // Get splits data if available
+  const splits = streams || [];
+  const split_obj = streams.reduce((acc: any, cur: any) => {
+    acc[cur.type] = cur
+    return acc
+  }, {});
 
-  const splits = activity.splits_metric || [];
-
-  for (let i = 0; i < segmentCount; i++) {
-    const segmentStartKm = i * segmentDistance;
-    const segmentEndKm = (i + 1) * segmentDistance;
-
-    let pace = 0; // sec/km
-    let elevation = 0;
-
-    if (splits.length > 0) {
-      const splitIndex = Math.floor((i * splits.length) / segmentCount);
-      const split = splits[splitIndex];
-      if (split && split.average_speed > 0) {
-        pace = 1000 / split.average_speed; // sec/km
-      }
-      elevation = split?.elevation_difference || 0;
-    } else {
-      // fallback avg pace
-      pace = (duration / distance);
-    }
-
+  for (let i = 0; i < segmentCount - 1; i++) {
+    const segmentStartInd = Math.floor(i * segmentInterval);
+    const segmentEndInd = Math.floor((i + 1) * segmentInterval);
+    const segmentTimeLength = (segmentEndInd - segmentStartInd) / totalInd * duration
+    const distance = (split_obj.distance.data[segmentEndInd] - split_obj.distance.data[segmentStartInd]) / 1000
+    const pace = segmentTimeLength / distance
+    const elevation = split_obj.altitude.data[segmentEndInd] - split_obj.altitude.data[segmentStartInd]
+    
+    // Determine genre and tempo based on pace and elevation
     const { genre, tempo } = determineMusicStyle(pace, elevation);
 
     intervals.push({
-      segment: i + 1,
-      startKm: segmentStartKm,
-      endKm: segmentEndKm,
-      distance: segmentDistance,
+      segment: i,
+      duration: segmentTimeLength,
+      startKm: split_obj.altitude.data[segmentStartInd],
+      endKm:  split_obj.altitude.data[segmentEndInd],
+      distance: distance,
       pace,
       elevation,
       genre,

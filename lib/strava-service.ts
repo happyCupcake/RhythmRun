@@ -116,6 +116,7 @@ export interface RunAnalysis {
     elevation: number; // meters
     heartRate?: number;
     genre: string;
+    duration: number;
     tempo: number; // BPM
   }>;
   polyline?: string | null;
@@ -129,7 +130,11 @@ export interface RunAnalysis {
 const api_url = "https://www.strava.com/api/v3"
 // Service functions for interacting with Strava API
 export class StravaService {
-  private static baseUrl = process.env.NODE_ENV === "development" ? "http://localhost:3000" : ""; 
+  private static baseUrl = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "";
+  /**
+   * Use the refresh token
+   */
+
   static async refreshStravaToken(refreshToken: string) {
     const response = await fetch(`/api/strava/refresh-token?refresh_token=${encodeURIComponent(refreshToken)}`, {
       method: "GET",
@@ -147,7 +152,7 @@ export class StravaService {
   static async getRecentRuns(limit: number = 5): Promise<StravaActivity[]> {
     try {
       console.log(localStorage.getItem("strava_access_token"))
-      const response = await fetch(`${api_url}/activities`, {
+      let response = await fetch(`${api_url}/activities`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

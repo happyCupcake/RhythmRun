@@ -106,26 +106,23 @@ export default function RhythmRun() {
   const generatePlaylistFromAnalysis = async (analysis: RunAnalysis) => {
     try {
       const uniqueSongs: SunoClip[] = []; // Map to store unique songs by pace+genre
-      console.log("started")
       // Group intervals by pace and genre to reuse songs
       for (const interval of analysis.intervals) {
         const key = `${interval.pace}-${interval.genre}`;
-        console.log(key)
-        console.log(key)
         // Generate a new song for this unique pace+genre combination
-        const prompt = `A ${interval.genre} song with ${interval.tempo} BPM tempo for running. The song should be energetic and motivating for a runner maintaining ${Math.round(interval.pace / 60)}:${String(Math.round(interval.pace % 60)).padStart(2, '0')} per kilometer pace.`;
+        console.log(interval.duration)
+        const prompt = `A ${interval.genre} song with ${interval.tempo} BPM tempo for running. The song should be energetic and motivating for a runner maintaining ${Math.round(interval.pace / 60)}:${String(Math.round(interval.pace % 60)).padStart(2, '0')} per kilometer pace. The song should be around ${interval.duration * 1.5} seconds long`;
         const tags = `${interval.genre}, ${interval.tempo} bpm, energetic, running, motivational`;
         
-        const clip = await SunoService.generateAndWaitForCompletion({
+        const clip =  await SunoService.generateAndWaitForCompletion({
           prompt,
           tags,
           makeInstrumental: false,
         });
         
         uniqueSongs.push(...clip);
-        
+        setGeneratedClips(uniqueSongs);
       }
-      setGeneratedClips(uniqueSongs);
     } catch (error) {
       console.error("Failed to generate playlist:", error);
       setError("Failed to generate playlist. Please try again.");
@@ -814,7 +811,6 @@ export default function RhythmRun() {
                             {clip.metadata.duration ? `${Math.round(clip.metadata.duration)}s` : ""}
                           </div>
                         </div>
-                        <h4>BPM: </h4>
 
                         {clip.metadata.tags && (
                           <p className="text-sm text-muted-foreground">
