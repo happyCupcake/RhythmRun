@@ -1,17 +1,20 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Montserrat, Notable } from "next/font/google";
 import "./globals.css";
 
 import "leaflet/dist/leaflet.css";
-
-const geistSans = Inter({
-  variable: "--font-geist-sans",
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin"],
+  weight: ["400", "700"], // preload regular and bold
+  style: ["normal", "italic"], // preload italics too
 });
 
-const geistMono = JetBrains_Mono({
-  variable: "--font-geist-mono",
+const notable = Notable({
+  variable: "--font-notable",
   subsets: ["latin"],
+  weight: "400",
+  display: "swap"
 });
 
 export const metadata: Metadata = {
@@ -27,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${montserrat.variable} ${notable.variable} antialiased`}
       >
         {children}
       </body>
