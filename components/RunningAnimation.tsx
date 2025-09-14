@@ -51,7 +51,7 @@ export default function RunningAnimation() {
   return (
     <div 
       className="fixed left-0 right-0 pointer-events-none z-50"
-      style={{ bottom: '120px' }} // Custom Y position - adjust this value
+      style={{ bottom: '65px' }} // Custom Y position - adjust this value
     >
       <div
         className="absolute transition-transform duration-75"
