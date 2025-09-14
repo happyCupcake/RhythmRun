@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
       }
     );
     const streams_res = await fetch(
-      `https://www.strava.com/api/v3/activities/${activityId}/streams?keys=altitude,pace&keys_by_type=true`,
+      `https://www.strava.com/api/v3/activities/${activityId}/streams?keys=altitude,pace,latlng&keys_by_type=true`,
       {
         headers:  {
           'Authorization': `Bearer ${access_token}`,
@@ -80,7 +80,7 @@ function analyzeRunData(activity: any, streams: any) {
     acc[cur.type] = cur
     return acc
   }, {});
-
+  console.log(split_obj)
   for (let i = 0; i < segmentCount - 1; i++) {
     const segmentStartInd = Math.floor(i * segmentInterval);
     const segmentEndInd = Math.floor((i + 1) * segmentInterval);
@@ -95,6 +95,8 @@ function analyzeRunData(activity: any, streams: any) {
     intervals.push({
       segment: i,
       duration: segmentTimeLength,
+      startLat: split_obj.latlng.data[segmentStartInd][0],
+      startLng: split_obj.latlng.data[segmentStartInd][1],
       startKm: split_obj.altitude.data[segmentStartInd],
       endKm:  split_obj.altitude.data[segmentEndInd],
       distance: distance,
