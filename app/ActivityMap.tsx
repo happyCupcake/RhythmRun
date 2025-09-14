@@ -3,7 +3,19 @@
 import { MapContainer, TileLayer, Polyline, Marker, Popup } from "react-leaflet";
 import polyline from "@mapbox/polyline";
 import "leaflet/dist/leaflet.css";
-import { LatLngExpression, Icon } from "leaflet";
+import { LatLngExpression } from "leaflet";
+import L from "leaflet";
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
+
+// ✅ Fix default Leaflet marker paths (for Next.js / Webpack)
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x.src,
+  iconUrl: markerIcon.src,
+  shadowUrl: markerShadow.src,
+});
 
 interface Interval {
   segment: number;
@@ -16,8 +28,6 @@ interface ActivityMapProps {
   intervals?: Interval[];
 }
 
-
-
 export default function ActivityMap({ encodedPolyline, intervals = [] }: ActivityMapProps) {
   if (!encodedPolyline) {
     return <p>No map data available.</p>;
@@ -28,10 +38,15 @@ export default function ActivityMap({ encodedPolyline, intervals = [] }: Activit
     .decode(encodedPolyline)
     .map(([lat, lng]) => [lat, lng] as LatLngExpression);
 
-  // Function: convert interval.startKm to an index in the positions array
+  // Find approximate position along polyline for a given km marker
   const getPositionForKm = (km: number) => {
     if (!positions.length) return positions[0];
-    const idx = Math.min(Math.round((km / (intervals[intervals.length - 1]?.endKm || 1)) * positions.length), positions.length - 1);
+    const totalKm = intervals[intervals.length - 1]?.endKm || 1;
+    const safeKm = km ?? 0;
+    const idx = Math.min(
+      Math.round((safeKm / totalKm) * positions.length),
+      positions.length - 1
+    );
     return positions[idx];
   };
 
@@ -41,11 +56,12 @@ export default function ActivityMap({ encodedPolyline, intervals = [] }: Activit
       zoom={13}
       style={{ height: "400px", width: "100%", borderRadius: "1rem" }}
     >
-    <TileLayer
-    url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
-    attribution="&copy; <a href='https://stadiamaps.com/'>Stadia Maps</a>, © <a href='https://openmaptiles.org/'>OpenMapTiles</a> © <a href='https://openstreetmap.org'>OpenStreetMap</a> contributors"
-    />
+      <TileLayer
+        url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
+        attribution="&copy; <a href='https://stadiamaps.com/'>Stadia Maps</a>, © <a href='https://openmaptiles.org/'>OpenMapTiles</a> © <a href='https://openstreetmap.org'>OpenStreetMap</a> contributors"
+      />
 
+      {/* Draw route polyline */}
       <Polyline positions={positions} color="red" weight={4} />
 
       {/* Interval markers */}
