@@ -57,6 +57,45 @@ export default function RhythmRun() {
     window.location.href = `http://www.strava.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_STRAVAID}&response_type=code&redirect_uri=${window.location.origin}/api/strava/exchange-token&approval_prompt=force&scope=read,activity:read_all`;
   };
 
+  const logoutFromStrava = () => {
+  // Clear stored tokens
+  localStorage.removeItem("strava_access_token");
+  localStorage.removeItem("strava_refresh_token");
+  localStorage.removeItem("strava_expiry");
+  
+  // Reset state
+  setIsAuthenticated(false);
+  setStravaRuns([]);
+  setSelectedRun(null);
+  setRunAnalysis(null);
+  setGeneratedClips([]);
+  setError(null);
+  
+  // Optionally reset user type to allow choosing again
+  setUserType(null);
+};
+
+const goToHomePage = () => {
+  // Reset all state to return to home page
+  setUserType(null);
+  setIsAuthenticated(false);
+  setStravaRuns([]);
+  setSelectedRun(null);
+  setRunAnalysis(null);
+  setInputType('distance');
+  setInputValue(0);
+  setIntervalOptions([]);
+  setSelectedInterval(null);
+  setIsGenerating(false);
+  setGeneratedClips([]);
+  setError(null);
+  
+  // Clear any Strava tokens as well
+  localStorage.removeItem("strava_access_token");
+  localStorage.removeItem("strava_refresh_token");
+  localStorage.removeItem("strava_expiry");
+};
+
   const loadStravaRuns = async () => {
     try {
       const runs = await StravaService.getRecentRuns(5);
@@ -297,7 +336,7 @@ export default function RhythmRun() {
               <Music className="w-6 h-6" />
               <Sparkles className="w-6 h-6" />
             </div>
-            <h1 className="text-4xl font-bold text-balance bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold text-balance bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent cursor-pointer hover:opacity-80 transition-opacity" onClick={goToHomePage}>
               RhythmRun
             </h1>
             <p className="text-lg text-muted-foreground text-pretty">
@@ -354,9 +393,14 @@ export default function RhythmRun() {
                   <>
                     <div className="flex items-center justify-between">
                       <h2 className="text-2xl font-semibold">Your Recent Runs</h2>
-                      <Button variant="outline" onClick={() => setUserType(null)}>
-                        Back
-                      </Button>
+                       <div className="flex gap-2">
+                        <Button variant="outline" onClick={logoutFromStrava}>
+                          Logout from Strava
+                        </Button>
+                        <Button variant="outline" onClick={() => setUserType(null)}>
+                          Back
+                        </Button>
+                        </div>
                     </div>
                     
                     {stravaRuns.length > 0 ? (
