@@ -156,6 +156,13 @@ export class StravaService {
 
       if (!response.ok) {
         const errorData = await response.json();
+        if (errorData.errors[0].field === "access_token") {
+          const refreshToken = localStorage.getItem("strava_refresh_token")
+          if (refreshToken) {
+            const resp = await this.refreshStravaToken(refreshToken)
+            window.location.href = `${window.location.origin}?access_token=${resp.access_token}&refresh_token=${resp.refresh_token}&expires_at=${resp.expires_at}`
+          }
+        }
         throw new Error(errorData.error || "Failed to fetch activities");
       }
 
