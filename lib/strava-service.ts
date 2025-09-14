@@ -129,14 +129,28 @@ const api_url = "https://www.strava.com/api/v3"
 // Service functions for interacting with Strava API
 export class StravaService {
   private static baseUrl = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "";
+  /**
+   * Use the refresh token
+   */
 
+  static async refreshStravaToken(refreshToken: string) {
+    const response = await fetch(`/api/strava/refresh-token?refresh_token=${encodeURIComponent(refreshToken)}`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Failed to refresh Strava token");
+    }
+    return await response.json();
+  }
   /**
    * Get user's recent running activities
    */
   static async getRecentRuns(limit: number = 5): Promise<StravaActivity[]> {
     try {
       console.log(localStorage.getItem("strava_access_token"))
-      const response = await fetch(`${api_url}/activities`, {
+      let response = await fetch(`${api_url}/activities`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -146,6 +160,13 @@ export class StravaService {
 
       if (!response.ok) {
         const errorData = await response.json();
+        if (errorData.errors[0].field === "access_token") {
+          const refreshToken = localStorage.getItem("strava_refresh_token")
+          if (refreshToken) {
+            const resp = await this.refreshStravaToken(refreshToken)
+            window.location.href = `${window.location.origin}?access_token=${resp.access_token}&refresh_token=${resp.refresh_token}&expires_at=${resp.expires_at}`
+          }
+        }
         throw new Error(errorData.error || "Failed to fetch activities");
       }
 

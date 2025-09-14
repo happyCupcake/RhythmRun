@@ -102,12 +102,9 @@ export default function RhythmRun() {
   const generatePlaylistFromAnalysis = async (analysis: RunAnalysis) => {
     try {
       const uniqueSongs: SunoClip[] = []; // Map to store unique songs by pace+genre
-      console.log("started")
       // Group intervals by pace and genre to reuse songs
       for (const interval of analysis.intervals) {
         const key = `${interval.pace}-${interval.genre}`;
-        console.log(key)
-        console.log(key)
         // Generate a new song for this unique pace+genre combination
         const prompt = `A ${interval.genre} song with ${interval.tempo} BPM tempo for running. The song should be energetic and motivating for a runner maintaining ${Math.round(interval.pace / 60)}:${String(Math.round(interval.pace % 60)).padStart(2, '0')} per kilometer pace.`;
         const tags = `${interval.genre}, ${interval.tempo} bpm, energetic, running, motivational`;
