@@ -67,7 +67,7 @@ function analyzeRunData(activity: any, streams: any) {
   
   // Calculate pace segments based on distance, not time
   const effective_size = distance + (duration / 10)
-  const segmentCount = Math.ceil(8 + 5 * Math.log(effective_size)) // ~2 segments per km
+  const segmentCount = Math.ceil(8 + Math.log(effective_size)) // ~2 segments per km
   const segmentInterval = streams[0].data.length / segmentCount
   const totalInd = streams[0].data.length
   const intervals = [];
@@ -91,6 +91,7 @@ function analyzeRunData(activity: any, streams: any) {
     
     intervals.push({
       segment: i,
+      duration: segmentTimeLength,
       startKm: split_obj.altitude.data[segmentStartInd],
       endKm:  split_obj.altitude.data[segmentEndInd],
       distance: distance,

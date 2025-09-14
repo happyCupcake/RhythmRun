@@ -116,6 +116,7 @@ export interface RunAnalysis {
     elevation: number; // meters
     heartRate?: number;
     genre: string;
+    duration: number;
     tempo: number; // BPM
   }>;
   overallStats: {
