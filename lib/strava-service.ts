@@ -125,7 +125,7 @@ export interface RunAnalysis {
     distance: number;
   };
 }
-
+const api_url = "https://www.strava.com/api/v3"
 // Service functions for interacting with Strava API
 export class StravaService {
   private static baseUrl = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "";
@@ -135,10 +135,12 @@ export class StravaService {
    */
   static async getRecentRuns(limit: number = 5): Promise<StravaActivity[]> {
     try {
-      const response = await fetch(`${this.baseUrl}/api/strava/activities?limit=${limit}`, {
+      console.log(localStorage.getItem("strava_access_token"))
+      const response = await fetch(`${api_url}/activities`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("strava_access_token")}`
         },
       });
 
@@ -148,7 +150,7 @@ export class StravaService {
       }
 
       const data = await response.json();
-      return data.activities || [];
+      return data || [];
     } catch (error) {
       console.error("Get recent runs error:", error);
       throw error;
@@ -160,10 +162,11 @@ export class StravaService {
    */
   static async getActivityDetails(activityId: number): Promise<StravaDetailedActivity> {
     try {
-      const response = await fetch(`${this.baseUrl}/api/strava/activities/${activityId}`, {
+      const response = await fetch(`${api_url}/activities/${activityId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("strava_access_token")}`
         },
       });
 
@@ -184,7 +187,7 @@ export class StravaService {
    */
   static async analyzeRun(activityId: number): Promise<RunAnalysis> {
     try {
-      const response = await fetch(`${this.baseUrl}/api/analyze-run`, {
+      const response = await fetch(`${this.baseUrl}/api/analyze-run?access_token=${localStorage.getItem("strava_access_token")}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

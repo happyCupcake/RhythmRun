@@ -3,7 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     const { activityId } = await request.json();
-
+    const { searchParams } = new URL(request.url)
+    const access_token = searchParams.get("access_token")
     if (!activityId) {
       return NextResponse.json(
         { error: "Activity ID is required" },
@@ -11,10 +12,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get access token from environment (in production, this should come from user session)
-    const accessToken = process.env.STRAVA_ACCESS_TOKEN;
     
-    if (!accessToken) {
+    if (!access_token) {
       return NextResponse.json(
         { error: "Strava access token not found" },
         { status: 401 }
@@ -23,14 +22,13 @@ export async function POST(request: NextRequest) {
 
     // Fetch detailed activity data from Strava
     const response = await fetch(
-      `https://www.strava.com/api/v3/activities/${activityId}?include_all_efforts=true`,
+      `https://www.strava.com/api/v3/activities/${activityId}`,
       {
         headers: {
-          'Authorization': `Bearer ${accessToken}`,
+          'Authorization': `Bearer ${access_token}`,
         },
       }
     );
-
     if (!response.ok) {
       const errorData = await response.json();
       console.error('Strava API error:', errorData);
@@ -41,7 +39,7 @@ export async function POST(request: NextRequest) {
     }
 
     const activity = await response.json();
-    
+    console.log(activity)
     // Analyze the run data
     const analysis = analyzeRunData(activity);
     

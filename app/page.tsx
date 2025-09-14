@@ -38,8 +38,14 @@ export default function RhythmRun() {
 
   // Check if user is authenticated with Strava
   useEffect(() => {
-    const stravaCode = localStorage.getItem("strava_code");
-    if (stravaCode) {
+    const query = new URLSearchParams(window.location.search)
+    const stravaAccess = query.get("access_token");
+    const stravaRefresh = query.get("refresh_token")
+    const expiryTime = query.get("expires_at")
+    if (stravaAccess && stravaRefresh && expiryTime) {
+      localStorage.setItem("strava_access_token", stravaAccess)
+      localStorage.setItem("strava_refresh_token", stravaRefresh )
+      localStorage.setItem("strava_expiry", expiryTime)
       setIsAuthenticated(true);
       setUserType('strava');
       loadStravaRuns();
@@ -96,33 +102,27 @@ export default function RhythmRun() {
 
   const generatePlaylistFromAnalysis = async (analysis: RunAnalysis) => {
     try {
-      const clips: SunoClip[] = [];
-      const uniqueSongs = new Map<string, SunoClip[]>(); // Map to store unique songs by pace+genre
-      
+      const uniqueSongs: SunoClip[] = []; // Map to store unique songs by pace+genre
+      console.log("started")
       // Group intervals by pace and genre to reuse songs
       for (const interval of analysis.intervals) {
         const key = `${interval.pace}-${interval.genre}`;
+        console.log(key)
+        console.log(key)
+        // Generate a new song for this unique pace+genre combination
+        const prompt = `A ${interval.genre} song with ${interval.tempo} BPM tempo for running. The song should be energetic and motivating for a runner maintaining ${Math.round(interval.pace / 60)}:${String(Math.round(interval.pace % 60)).padStart(2, '0')} per kilometer pace.`;
+        const tags = `${interval.genre}, ${interval.tempo} bpm, energetic, running, motivational`;
         
-        if (!uniqueSongs.has(key)) {
-          // Generate a new song for this unique pace+genre combination
-          const prompt = `A ${interval.genre} song with ${interval.tempo} BPM tempo for running. The song should be energetic and motivating for a runner maintaining ${Math.round(interval.pace / 60)}:${String(Math.round(interval.pace % 60)).padStart(2, '0')} per kilometer pace.`;
-          const tags = `${interval.genre}, ${interval.tempo} bpm, energetic, running, motivational`;
-          
-          const clip = await SunoService.generateAndWaitForCompletion({
-            prompt,
-            tags,
-            makeInstrumental: false,
-          });
-          
-          uniqueSongs.set(key, clip);
-        }
+        const clip = await SunoService.generateAndWaitForCompletion({
+          prompt,
+          tags,
+          makeInstrumental: false,
+        });
         
-        // Add the song to our playlist (reuse if same pace+genre)
-        const song = uniqueSongs.get(key)![0]; // Get the first clip from the array
-        clips.push(song);
+        uniqueSongs.push(...clip);
+        
       }
-      
-      setGeneratedClips(clips);
+      setGeneratedClips(uniqueSongs);
     } catch (error) {
       console.error("Failed to generate playlist:", error);
       setError("Failed to generate playlist. Please try again.");
@@ -135,32 +135,27 @@ export default function RhythmRun() {
       setError(null);
       
       const clips: SunoClip[] = [];
-      const uniqueSongs = new Map<string, SunoClip[]>(); // Map to store unique songs by pace+genre
+      const uniqueSongs: SunoClip[] = []; // Map to store unique songs by pace+genre
       
       // Group intervals by pace and genre to reuse songs
       for (const intervalData of interval.intervals) {
-        const key = `${intervalData.pace}-${intervalData.genre}`;
         
-        if (!uniqueSongs.has(key)) {
-          // Generate a new song for this unique pace+genre combination
-          const prompt = `A ${intervalData.genre} song with ${intervalData.tempo} BPM tempo for running. The song should be energetic and motivating for a runner maintaining ${Math.round(intervalData.pace / 60)}:${String(Math.round(intervalData.pace % 60)).padStart(2, '0')} per kilometer pace.`;
-          const tags = `${intervalData.genre}, ${intervalData.tempo} bpm, energetic, running, motivational`;
-          
-          const clip = await SunoService.generateAndWaitForCompletion({
-            prompt,
-            tags,
-            makeInstrumental: false,
-          });
-          
-          uniqueSongs.set(key, clip);
-        }
+        // Generate a new song for this unique pace+genre combination
+        const prompt = `A ${intervalData.genre} song with ${intervalData.tempo} BPM tempo for running. The song should be energetic and motivating for a runner maintaining ${Math.round(intervalData.pace / 60)}:${String(Math.round(intervalData.pace % 60)).padStart(2, '0')} per kilometer pace.`;
+        const tags = `${intervalData.genre}, ${intervalData.tempo} bpm, energetic, running, motivational`;
         
-        // Add the song to our playlist (reuse if same pace+genre)
-        const song = uniqueSongs.get(key)![0]; // Get the first clip from the array
-        clips.push(song);
-      }
+        const clip = await SunoService.generateAndWaitForCompletion({
+          prompt,
+          tags,
+          makeInstrumental: false,
+        });
+        
+        uniqueSongs.push(...clip)
       
-      setGeneratedClips(clips);
+      
+      }
+
+      setGeneratedClips(uniqueSongs);
     } catch (error) {
       console.error("Failed to generate playlist:", error);
       setError("Failed to generate playlist. Please try again.");
@@ -801,8 +796,8 @@ export default function RhythmRun() {
               <div className="space-y-6">
                 <h2 className="text-2xl font-semibold text-center">Your Running Playlist</h2>
                 <div className="space-y-4">
-                  {generatedClips.map((clip) => (
-                    <Card key={clip.id} className="p-4 bg-gradient-to-r from-purple-50 to-orange-50">
+                  {generatedClips.map((clip, ind) => (
+                    <Card key={ind} className="p-4 bg-gradient-to-r from-green-50 to-blue-50">
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
                           <h3 className="font-semibold text-lg">
