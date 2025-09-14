@@ -51,7 +51,7 @@ export default function RunningAnimation() {
   return (
     <div 
       className="fixed left-0 right-0 pointer-events-none z-50"
-      style={{ bottom: '50px' }} // Custom Y position - adjust this value
+      style={{ bottom: '120px' }} // Custom Y position - adjust this value
     >
       <div
         className="absolute transition-transform duration-75"
@@ -63,8 +63,8 @@ export default function RunningAnimation() {
         <Image
           src={`/components/refs/${imageFiles[frameSequence[currentFrame]]}`}
           alt="Running stick figure"
-          width={75}
-          height={75}
+          width={200}
+          height={200}
           className="drop-shadow-lg"
         />
       </div>

@@ -129,9 +129,28 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'Poppins', sans-serif; /* Set Poppins as default */
+    cursor: url('https://icons.iconarchive.com/icons/custom-icon-design/mono-general-2/32/run-icon.png') 0 0, auto;
+
   }
   h1 {
     font-family: 'Notable', sans-serif; /* Set Notable for h1 */
+  }
+  
+  /* Custom cursor for all elements */
+  html, body, div, span, button, a, input, textarea, select {
+    cursor: url('https://icons.iconarchive.com/icons/custom-icon-design/mono-general-2/32/run-icon.png') 0 0, auto;
+
+  }
+  
+  /* Specific cursor states */
+  button:hover, a:hover {
+    cursor: url('https://icons.iconarchive.com/icons/custom-icon-design/mono-general-2/32/run-icon.png') 0 0, auto;
+
+  }
+  
+  input[type="text"], input[type="number"], textarea {
+    cursor: url('https://icons.iconarchive.com/icons/custom-icon-design/mono-general-2/32/run-icon.png') 0 0, auto;
+
   }
 }
 
