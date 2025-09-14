@@ -63,8 +63,8 @@ export default function RunningAnimation() {
         <Image
           src={`/components/refs/${imageFiles[frameSequence[currentFrame]]}`}
           alt="Running stick figure"
-          width={200}
-          height={200}
+          width={100}
+          height={100}
           className="drop-shadow-lg"
         />
       </div>
